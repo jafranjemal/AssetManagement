@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using AssetManagement.Web.Helpers
+@inject ControllerHelper ControllerHelper
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -8,32 +10,38 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/AssetManagement.Web.styles.css" asp-append-version="true" />
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">AssetManagement.Web</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
+<body class="bg-light">
+
+    <!-- Sidebar -->
+    <div class="d-flex" id="wrapper">
+        <div class="bg-dark text-white p-4" id="sidebar" style="min-height: 100vh; width: 250px;">
+            <!-- App name at the top of the sidebar -->
+            <div class="mb-4 text-center">
+                <h4>AssetManagement</h4>
+                <p class="small">Manage your assets</p>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+
+            <!-- Controller list -->
+            <ul class="nav flex-column">
+                @foreach (var controller in ControllerHelper.GetControllers())
+                {
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="@Url.Action("Index", controller)">
+                            @controller
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+
+        <!-- Content Area -->
+        <div id="page-content-wrapper" class="flex-grow-1">
+            <div class="container-fluid p-4">
+                <main role="main" class="pb-3">
+                    @RenderBody()
+                </main>
+            </div>
+        </div>
     </div>
 
     <footer class="border-top footer text-muted">

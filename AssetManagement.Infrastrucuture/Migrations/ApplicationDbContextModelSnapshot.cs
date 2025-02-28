@@ -35,7 +35,7 @@ namespace AssetManagement.Infrastrucuture.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
@@ -64,7 +64,7 @@ namespace AssetManagement.Infrastrucuture.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("DriverId")
@@ -96,7 +96,7 @@ namespace AssetManagement.Infrastrucuture.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("LastInspection")
@@ -128,8 +128,18 @@ namespace AssetManagement.Infrastrucuture.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("CostCenter")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("DivisionName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LocationName")
                         .IsRequired()
@@ -145,6 +155,53 @@ namespace AssetManagement.Infrastrucuture.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Locations");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("901b2c5e-fc7a-441b-9d79-4940b60b69cc"),
+                            ContactInCharge = "John Doe",
+                            CostCenter = "Fleet Management",
+                            DivisionName = "Devision 1",
+                            LocationName = "Main Garage",
+                            ProjectName = "Fleet Management"
+                        },
+                        new
+                        {
+                            Id = new Guid("8346b56d-d507-4dd7-99ba-3a17881cc642"),
+                            ContactInCharge = "Jane Smith",
+                            CostCenter = "Logistics",
+                            DivisionName = "Devision 1",
+                            LocationName = "East Warehouse",
+                            ProjectName = "Logistics"
+                        },
+                        new
+                        {
+                            Id = new Guid("441d36b4-dfcd-4817-afe1-27a67a1b218c"),
+                            ContactInCharge = "Michael Brown",
+                            CostCenter = "Construction",
+                            DivisionName = "Devision 1",
+                            LocationName = "North Yard",
+                            ProjectName = "Construction"
+                        },
+                        new
+                        {
+                            Id = new Guid("6fa5b8c6-6f12-4ace-8232-2c06454b64a1"),
+                            ContactInCharge = "Emily Davis",
+                            CostCenter = "Distribution",
+                            DivisionName = "Devision 1",
+                            LocationName = "West Depot",
+                            ProjectName = "Distribution"
+                        },
+                        new
+                        {
+                            Id = new Guid("8733e63f-6446-4b91-b7b6-744a8cfcf75e"),
+                            ContactInCharge = "Robert Wilson",
+                            CostCenter = "Transport Hub",
+                            DivisionName = "Devision 1",
+                            LocationName = "South Terminal",
+                            ProjectName = "Transport Hub"
+                        });
                 });
 
             modelBuilder.Entity("AssetManagement.Domain.Entities.MaintenanceRecord", b =>
@@ -153,7 +210,7 @@ namespace AssetManagement.Infrastrucuture.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("MaintenanceDate")
@@ -186,7 +243,7 @@ namespace AssetManagement.Infrastrucuture.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("PermitHolder")
@@ -203,7 +260,7 @@ namespace AssetManagement.Infrastrucuture.Migrations
                     b.Property<DateTime>("ValidUntil")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("VehicleId")
+                    b.Property<Guid?>("VehicleId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -219,7 +276,7 @@ namespace AssetManagement.Infrastrucuture.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("InstalledDate")
@@ -261,7 +318,7 @@ namespace AssetManagement.Infrastrucuture.Migrations
                     b.Property<int>("Co2Emission")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("EstimatedEndTermValue")
@@ -287,11 +344,19 @@ namespace AssetManagement.Infrastrucuture.Migrations
                     b.Property<Guid>("LocationId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("MaintenanceStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid>("ModelId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("NextInspection")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("OperationalStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PlateNumber")
                         .IsRequired()
@@ -299,10 +364,6 @@ namespace AssetManagement.Infrastrucuture.Migrations
 
                     b.Property<decimal>("PurchaseValue")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SteeringType")
                         .IsRequired()
@@ -325,6 +386,10 @@ namespace AssetManagement.Infrastrucuture.Migrations
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("VehicleStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -349,8 +414,10 @@ namespace AssetManagement.Infrastrucuture.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime?>("CreatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<string>("Division")
                         .IsRequired()
@@ -370,6 +437,48 @@ namespace AssetManagement.Infrastrucuture.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("VehicleBrands");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("9497f582-8512-443f-a457-0fb2b807656a"),
+                            Category = "Howo",
+                            Division = "T5G",
+                            Name = "Sinotruk",
+                            SubDivision = "Heavy Trucks"
+                        },
+                        new
+                        {
+                            Id = new Guid("9497f582-8512-443f-a457-0fb2b807656b"),
+                            Category = "Sedan",
+                            Division = "Camry",
+                            Name = "Toyota",
+                            SubDivision = "Hybrid"
+                        },
+                        new
+                        {
+                            Id = new Guid("1885aa2b-fd41-475b-863a-d55efca9f4d3"),
+                            Category = "SUV",
+                            Division = "Explorer",
+                            Name = "Ford",
+                            SubDivision = "XLT"
+                        },
+                        new
+                        {
+                            Id = new Guid("66694f49-8e27-4b78-8233-57f59b9b5036"),
+                            Category = "Electric",
+                            Division = "Model S",
+                            Name = "Tesla",
+                            SubDivision = "Plaid"
+                        },
+                        new
+                        {
+                            Id = new Guid("a479fb2c-b478-441a-b950-11635ac696a7"),
+                            Category = "Compact",
+                            Division = "Civic",
+                            Name = "Honda",
+                            SubDivision = "Sport"
+                        });
                 });
 
             modelBuilder.Entity("AssetManagement.Domain.Entities.VehicleModel", b =>
@@ -381,7 +490,7 @@ namespace AssetManagement.Infrastrucuture.Migrations
                     b.Property<Guid>("BrandId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ModelName")
@@ -399,6 +508,29 @@ namespace AssetManagement.Infrastrucuture.Migrations
                     b.HasIndex("BrandId");
 
                     b.ToTable("VehicleModels");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("f17a7c8d-4a3b-4b81-b1e6-8d97b0f1a8c9"),
+                            BrandId = new Guid("9497f582-8512-443f-a457-0fb2b807656b"),
+                            ModelName = "Corolla",
+                            ModelYear = 2023
+                        },
+                        new
+                        {
+                            Id = new Guid("d91e3b7a-5c8e-4f72-a4d7-6c92b3d8a7e9"),
+                            BrandId = new Guid("a479fb2c-b478-441a-b950-11635ac696a7"),
+                            ModelName = "Civic",
+                            ModelYear = 2022
+                        },
+                        new
+                        {
+                            Id = new Guid("e8b2c7d6-3a9e-4b5f-bd17-2f3c9a7e6b8a"),
+                            BrandId = new Guid("1885aa2b-fd41-475b-863a-d55efca9f4d3"),
+                            ModelName = "F-150",
+                            ModelYear = 2024
+                        });
                 });
 
             modelBuilder.Entity("AssetManagement.Domain.Entities.VehicleType", b =>
@@ -411,8 +543,10 @@ namespace AssetManagement.Infrastrucuture.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime?>("CreatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<string>("Division")
                         .IsRequired()
@@ -428,6 +562,43 @@ namespace AssetManagement.Infrastrucuture.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("VehicleTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("99e315c4-395d-4a32-9342-874f13628ebf"),
+                            Category = "Light Vehicles",
+                            Division = "Transport",
+                            TypeName = "Pickup"
+                        },
+                        new
+                        {
+                            Id = new Guid("67f85360-095e-4f42-ac74-1f7790084237"),
+                            Category = "Passenger Vehicles",
+                            Division = "City Transport",
+                            TypeName = "Sedan"
+                        },
+                        new
+                        {
+                            Id = new Guid("8d8f6f0b-dd69-478e-9f6e-66ba77908a6d"),
+                            Category = "Off-Road Vehicles",
+                            Division = "All-Terrain",
+                            TypeName = "SUV"
+                        },
+                        new
+                        {
+                            Id = new Guid("8c1b774d-ef82-4c92-bb69-e3a62d8b260b"),
+                            Category = "Eco-Friendly",
+                            Division = "Sustainable Mobility",
+                            TypeName = "Electric"
+                        },
+                        new
+                        {
+                            Id = new Guid("37bab96f-8fd9-4d67-b61e-e593b2d0d8ec"),
+                            Category = "Heavy Duty",
+                            Division = "Industrial Transport",
+                            TypeName = "Truck"
+                        });
                 });
 
             modelBuilder.Entity("AssetManagement.Domain.Entities.Driver", b =>
@@ -475,13 +646,9 @@ namespace AssetManagement.Infrastrucuture.Migrations
 
             modelBuilder.Entity("AssetManagement.Domain.Entities.Permit", b =>
                 {
-                    b.HasOne("AssetManagement.Domain.Entities.Vehicle", "Vehicle")
+                    b.HasOne("AssetManagement.Domain.Entities.Vehicle", null)
                         .WithMany("Permits")
-                        .HasForeignKey("VehicleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Vehicle");
+                        .HasForeignKey("VehicleId");
                 });
 
             modelBuilder.Entity("AssetManagement.Domain.Entities.SafetyEquipment", b =>

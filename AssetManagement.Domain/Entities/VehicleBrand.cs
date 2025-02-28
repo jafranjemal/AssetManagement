@@ -12,6 +12,10 @@ namespace AssetManagement.Domain.Entities
         public string Category { get; set; }
         public string Division { get; set; }
         public string SubDivision { get; set; }
-        public ICollection<VehicleModel> Models { get; set; }
+        
+
+        public ICollection<VehicleModel> Models { get; set; } = [];
+
+       
     }
 }

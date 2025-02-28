@@ -11,5 +11,7 @@ namespace AssetManagement.Domain.Entities
         public string TypeName { get; set; }
         public string Category { get; set; }
         public string Division { get; set; }
+
+        
     }
 }

@@ -34,29 +34,29 @@ namespace AssetManagement.Infrastrucuture.Data
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
 
             // Pre-generate GUIDs and DateTime values
-            var sinotrukId = Guid.NewGuid();
-            var toyotaId = Guid.NewGuid();
-            var fordId = Guid.NewGuid();
-            var teslaId = Guid.NewGuid();
-            var hondaId = Guid.NewGuid();
+            var sinotrukId = new Guid("{9497F582-8512-443F-A457-0FB2B807656A}");
+            var toyotaId = new  Guid("{9497F582-8512-443F-A457-0FB2B807656B}");
+            var fordId = new   Guid("{1885AA2B-FD41-475B-863A-D55EFCA9F4D3}");
+            var teslaId =   new Guid("{66694F49-8E27-4B78-8233-57F59B9B5036}");
+            var hondaId =   new Guid("{A479FB2C-B478-441A-B950-11635AC696A7}");
 
-            var pickupTypeId = Guid.NewGuid();
-            var sedanTypeId = Guid.NewGuid();
-            var suvTypeId = Guid.NewGuid();
-            var electricTypeId = Guid.NewGuid();
-            var truckTypeId = Guid.NewGuid();
+            var pickupTypeId = new Guid("{99E315C4-395D-4A32-9342-874F13628EBF}");
+            var sedanTypeId = new Guid("{67F85360-095E-4F42-AC74-1F7790084237}");
+            var suvTypeId = new Guid("{8D8F6F0B-DD69-478E-9F6E-66BA77908A6D}");
+            var electricTypeId = new Guid("{8C1B774D-EF82-4C92-BB69-E3A62D8B260B}");
+            var truckTypeId = new Guid("{37BAB96F-8FD9-4D67-B61E-E593B2D0D8EC}");
 
-            var mainGarageId = Guid.NewGuid();
-            var eastWarehouseId = Guid.NewGuid();
-            var northYardId = Guid.NewGuid();
-            var westDepotId = Guid.NewGuid();
-            var southTerminalId = Guid.NewGuid();
+            var mainGarageId = new Guid("{901B2C5E-FC7A-441B-9D79-4940B60B69CC}");
+            var eastWarehouseId = new Guid("{8346B56D-D507-4DD7-99BA-3A17881CC642}");
+            var northYardId = new Guid("{441D36B4-DFCD-4817-AFE1-27A67A1B218C}");
+            var westDepotId = new Guid("{6FA5B8C6-6F12-4ACE-8232-2C06454B64A1}");
+            var southTerminalId = new Guid("{8733E63F-6446-4B91-B7B6-744A8CFCF75E}");
 
-            var driver1Id = Guid.NewGuid();
-            var driver2Id = Guid.NewGuid();
-            var driver3Id = Guid.NewGuid();
-            var driver4Id = Guid.NewGuid();
-            var driver5Id = Guid.NewGuid();
+            var driver1Id = new Guid("{2E63EC2F-5B04-4D82-9731-BF369E97F827}");
+            var driver2Id = new Guid("{E6B5EFD3-F050-40D7-BBE0-684ACE0CFA1A}");
+            var driver3Id = new Guid("{DD10B432-BFFC-474B-8AC4-F7D3E2533122}");
+            var driver4Id = new Guid("{98D8FBED-C5C4-461D-A3D3-C60D25A220B5}");
+            var driver5Id = new Guid("{98D8FBED-C5C4-461D-A3D3-C60D25A220B5}");
 
 
             // Vehicle relationships
@@ -103,15 +103,8 @@ namespace AssetManagement.Infrastrucuture.Data
                 .WithOne(v => v.AssignedDriver)
                 .HasForeignKey<Driver>(d => d.AssignedVehicleId)
                 .OnDelete(DeleteBehavior.SetNull);
-
-            
-
-            // Permit relationship
-            modelBuilder.Entity<Permit>()
-                .HasOne(p => p.Vehicle)
-                .WithMany(v => v.Permits)
-                .HasForeignKey(p => p.VehicleId)
-                .OnDelete(DeleteBehavior.Cascade);
+ 
+          
 
             // Safety Equipment relationship
             modelBuilder.Entity<SafetyEquipment>()
@@ -140,33 +133,52 @@ namespace AssetManagement.Infrastrucuture.Data
                 .WithMany(d => d.Certifications)
                 .HasForeignKey(dc => dc.DriverId)
                 .OnDelete(DeleteBehavior.Cascade);
-       
 
+
+            modelBuilder.Entity<VehicleBrand>()
+       .Property(l => l.CreatedDate)
+       .HasDefaultValueSql("GETUTCDATE()"); // Auto-set in database
+
+            modelBuilder.Entity<VehicleType>()
+       .Property(l => l.CreatedDate)
+       .HasDefaultValueSql("GETUTCDATE()"); // Auto-set in database
+
+            modelBuilder.Entity<Location>()
+       .Property(l => l.CreatedDate)
+       .HasDefaultValueSql("GETUTCDATE()"); // Auto-set in database
 
             // Define your static data
-            //modelBuilder.Entity<VehicleBrand>().HasData(
-            //    new VehicleBrand { Id = sinotrukId, Name = "Sinotruk", Category = "Howo", Division = "T5G", SubDivision = "Heavy Trucks" },
-            //    new VehicleBrand { Id = toyotaId, Name = "Toyota", Category = "Sedan", Division = "Camry", SubDivision = "Hybrid" },
-            //    new VehicleBrand { Id = fordId, Name = "Ford", Category = "SUV", Division = "Explorer", SubDivision = "XLT" },
-            //    new VehicleBrand { Id = teslaId, Name = "Tesla", Category = "Electric", Division = "Model S", SubDivision = "Plaid" },
-            //    new VehicleBrand { Id = hondaId, Name = "Honda", Category = "Compact", Division = "Civic", SubDivision = "Sport" }
-            //);
+            modelBuilder.Entity<VehicleBrand>().HasData(
+                new VehicleBrand { Id = sinotrukId, Name = "Sinotruk", Category = "Howo", Division = "T5G", SubDivision = "Heavy Trucks" },
+                new VehicleBrand { Id = toyotaId, Name = "Toyota", Category = "Sedan", Division = "Camry", SubDivision = "Hybrid" },
+                new VehicleBrand { Id = fordId, Name = "Ford", Category = "SUV", Division = "Explorer", SubDivision = "XLT" },
+                new VehicleBrand { Id = teslaId, Name = "Tesla", Category = "Electric", Division = "Model S", SubDivision = "Plaid" },
+                new VehicleBrand { Id = hondaId, Name = "Honda", Category = "Compact", Division = "Civic", SubDivision = "Sport" }
+            );
 
-            //modelBuilder.Entity<VehicleType>().HasData(
-            //    new VehicleType { Id = pickupTypeId, TypeName = "Pickup", Category = "Light Vehicles", Division = "Transport" },
-            //    new VehicleType { Id = sedanTypeId, TypeName = "Sedan", Category = "Passenger Vehicles", Division = "City Transport" },
-            //    new VehicleType { Id = suvTypeId, TypeName = "SUV", Category = "Off-Road Vehicles", Division = "All-Terrain" },
-            //    new VehicleType { Id = electricTypeId, TypeName = "Electric", Category = "Eco-Friendly", Division = "Sustainable Mobility" },
-            //    new VehicleType { Id = truckTypeId, TypeName = "Truck", Category = "Heavy Duty", Division = "Industrial Transport" }
-            //);
+            modelBuilder.Entity<VehicleModel>().HasData(
+    new VehicleModel { Id = Guid.Parse("f17a7c8d-4a3b-4b81-b1e6-8d97b0f1a8c9"), ModelName = "Corolla", ModelYear = 2023, BrandId = toyotaId },
+    new VehicleModel { Id = Guid.Parse("d91e3b7a-5c8e-4f72-a4d7-6c92b3d8a7e9"), ModelName = "Civic", ModelYear = 2022, BrandId = hondaId },
+    new VehicleModel { Id = Guid.Parse("e8b2c7d6-3a9e-4b5f-bd17-2f3c9a7e6b8a"), ModelName = "F-150", ModelYear = 2024, BrandId = fordId }
+);
 
-            //modelBuilder.Entity<Location>().HasData(
-            //    new Location { Id = mainGarageId, LocationName = "Main Garage", ContactInCharge = "John Doe", ProjectName = "Fleet Management" },
-            //    new Location { Id = eastWarehouseId, LocationName = "East Warehouse", ContactInCharge = "Jane Smith", ProjectName = "Logistics" },
-            //    new Location { Id = northYardId, LocationName = "North Yard", ContactInCharge = "Michael Brown", ProjectName = "Construction" },
-            //    new Location { Id = westDepotId, LocationName = "West Depot", ContactInCharge = "Emily Davis", ProjectName = "Distribution" },
-            //    new Location { Id = southTerminalId, LocationName = "South Terminal", ContactInCharge = "Robert Wilson", ProjectName = "Transport Hub" }
-            //);
+
+
+            modelBuilder.Entity<VehicleType>().HasData(
+                new VehicleType { Id = pickupTypeId, TypeName = "Pickup", Category = "Light Vehicles", Division = "Transport" },
+                new VehicleType { Id = sedanTypeId, TypeName = "Sedan", Category = "Passenger Vehicles", Division = "City Transport" },
+                new VehicleType { Id = suvTypeId, TypeName = "SUV", Category = "Off-Road Vehicles", Division = "All-Terrain" },
+                new VehicleType { Id = electricTypeId, TypeName = "Electric", Category = "Eco-Friendly", Division = "Sustainable Mobility" },
+                new VehicleType { Id = truckTypeId, TypeName = "Truck", Category = "Heavy Duty", Division = "Industrial Transport" }
+            );
+
+            modelBuilder.Entity<Location>().HasData(
+                new Location { Id = mainGarageId, LocationName = "Main Garage", ContactInCharge = "John Doe", ProjectName = "Fleet Management" , CostCenter= "Fleet Management" , DivisionName="Devision 1" },
+                new Location { Id = eastWarehouseId, LocationName = "East Warehouse", ContactInCharge = "Jane Smith", ProjectName = "Logistics" , CostCenter="Logistics", DivisionName = "Devision 1" },
+                new Location { Id = northYardId, LocationName = "North Yard", ContactInCharge = "Michael Brown", ProjectName = "Construction" , CostCenter="Construction", DivisionName = "Devision 1" },
+                new Location { Id = westDepotId, LocationName = "West Depot", ContactInCharge = "Emily Davis", ProjectName = "Distribution" , CostCenter="Distribution", DivisionName = "Devision 1" },
+                new Location { Id = southTerminalId, LocationName = "South Terminal", ContactInCharge = "Robert Wilson", ProjectName = "Transport Hub" , CostCenter="Transport Hub", DivisionName = "Devision 1" }
+            );
 
             //modelBuilder.Entity<Driver>().HasData(
             //    new Driver { Id = driver1Id, Name = "John Smith", ContactNumber = "123-456-7890" },
@@ -196,8 +208,8 @@ namespace AssetManagement.Infrastrucuture.Data
 
             //// Seed Permit data
             //modelBuilder.Entity<Permit>().HasData(
-            //    new Permit { Id = permit1Id, VehicleId = vehicle1Id, PermitType = "Hazardous Waste Transport", PermitHolder = "WM", ValidUntil = new DateTime(2025, 12, 31) },
-            //    new Permit { Id = permit2Id, VehicleId = vehicle2Id, PermitType = "Large-Scale Shipments", PermitHolder = "ICS", ValidUntil = new DateTime(2024, 11, 30) }
+            //    new Permit { Id= new Guid("441d36b4-dfcd-4817-afe1-27a67a1b218c"),   PermitType = "Hazardous Waste Transport", PermitHolder = "WM", ValidUntil = new DateTime(2025, 12, 31) },
+            //    new Permit { Id= new Guid("6fa5b8c6-6f12-4ace-8232-2c06454b64a1"), PermitType = "Large-Scale Shipments", PermitHolder = "ICS", ValidUntil = new DateTime(2024, 11, 30) }
             //);
 
             //// Seed SafetyEquipment data

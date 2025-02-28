@@ -1,0 +1,161 @@
+﻿@model IEnumerable<AssetManagement.Domain.Entities.Vehicle>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.SystemId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PlateNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AssignedDriverId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FuelType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FuelCapacity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TransmissionType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SteeringType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Horsepower)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Co2Emission)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GpsId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TrackerType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PurchaseValue)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EstimatedEndTermValue)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastInspection)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NextInspection)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VehicleStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Brand)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Model)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Location)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdatedDate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.SystemId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PlateNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AssignedDriverId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FuelType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FuelCapacity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TransmissionType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SteeringType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Horsepower)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Co2Emission)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GpsId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TrackerType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PurchaseValue)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EstimatedEndTermValue)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastInspection)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NextInspection)
+            </td>
+            <td>
+                    @Html.DisplayFor(modelItem => item.VehicleStatus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Brand.Category)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Model.ModelName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type.Category)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Location.ContactInCharge)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdatedDate)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -11,7 +11,7 @@ namespace AssetManagement.Domain.Entities
         public string Name { get; set; }
         public string ContactNumber { get; set; }
         public Guid? AssignedVehicleId { get; set; }
-        public Vehicle AssignedVehicle { get; set; }
-        public ICollection<DriverCertification> Certifications { get; set; }
+        public Vehicle? AssignedVehicle { get; set; } = null;
+        public ICollection<DriverCertification> Certifications { get; set; } = [];
     }
 }

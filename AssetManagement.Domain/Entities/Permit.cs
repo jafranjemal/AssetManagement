@@ -8,10 +8,12 @@ namespace AssetManagement.Domain.Entities
 {
     public class Permit : BaseEntity
     {
-        public Guid VehicleId { get; set; }
+       
         public string PermitType { get; set; }
         public string PermitHolder { get; set; }
         public DateTime ValidUntil { get; set; }
-        public Vehicle Vehicle { get; set; }
+
+        
+
     }
 }
