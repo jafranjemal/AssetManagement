@@ -54,7 +54,7 @@ namespace AssetManagement.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Category,Division,SubDivision,Id")] VehicleBrand vehicleBrand)
+        public async Task<IActionResult> Create([Bind("Name,Category,Division,SubDivision,Id,CreatedDate,UpdatedDate")] VehicleBrand vehicleBrand)
         {
             if (ModelState.IsValid)
             {

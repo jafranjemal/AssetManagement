@@ -24,9 +24,10 @@ namespace AssetManagement.Infrastrucuture.Data
         public DbSet<Location> Locations { get; set; }
         public DbSet<Permit> Permits { get; set; }
         public DbSet<SafetyEquipment> SafetyEquipments { get; set; }
+        public DbSet<SafetyCriteria> SafetyCriterias { get; set; }
         public DbSet<MaintenanceRecord> MaintenanceRecords { get; set; }
         public DbSet<InspectionRecord> InspectionRecords { get; set; }
-        public DbSet<DriverCertification> DriverCertifications { get; set; }
+        
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -107,9 +108,9 @@ namespace AssetManagement.Infrastrucuture.Data
           
 
             // Safety Equipment relationship
-            modelBuilder.Entity<SafetyEquipment>()
+            modelBuilder.Entity<VehicleEquipment>()
                 .HasOne(se => se.Vehicle)
-                .WithMany(v => v.SafetyEquipments)
+                .WithMany(v => v.InstalledEquipment)
                 .HasForeignKey(se => se.VehicleId)
                 .OnDelete(DeleteBehavior.Cascade);
 
@@ -165,11 +166,68 @@ namespace AssetManagement.Infrastrucuture.Data
 
 
             modelBuilder.Entity<VehicleType>().HasData(
-                new VehicleType { Id = pickupTypeId, TypeName = "Pickup", Category = "Light Vehicles", Division = "Transport" },
-                new VehicleType { Id = sedanTypeId, TypeName = "Sedan", Category = "Passenger Vehicles", Division = "City Transport" },
-                new VehicleType { Id = suvTypeId, TypeName = "SUV", Category = "Off-Road Vehicles", Division = "All-Terrain" },
-                new VehicleType { Id = electricTypeId, TypeName = "Electric", Category = "Eco-Friendly", Division = "Sustainable Mobility" },
-                new VehicleType { Id = truckTypeId, TypeName = "Truck", Category = "Heavy Duty", Division = "Industrial Transport" }
+               
+
+                 new VehicleType
+                 {
+                     Id = pickupTypeId,
+                     TypeName = "Passenger",
+                     Category = "Sedan",
+                     Division = "Compact",
+                     SubDivision = "4-Door",
+                     ChassisNo = null,
+                     EngineNo = null,
+                     SeatsNo = "5",
+                     NomberOfCylinder = "4",
+                     DoorsNo = "4",
+                     Color = "Various",
+                     TransmissionType = "Automatic",
+                     SteeringType = "Left Hand",
+                     FuelType = "Petrol",
+                     FuelCapacity = "50L",
+                     Altered = false,
+                     Notes = "Standard passenger sedan"
+                 },
+            new VehicleType
+            {
+                Id = sedanTypeId,
+                TypeName = "Transport",
+                Category = "Pick Up",
+                Division = "Pick Up 3 Ton",
+                SubDivision = "Double Cabin",
+                ChassisNo = null,
+                EngineNo = null,
+                SeatsNo = "6",
+                NomberOfCylinder = "6",
+                DoorsNo = "4",
+                Color = "White",
+                TransmissionType = "Manual",
+                SteeringType = "Right Hand",
+                FuelType = "Diesel",
+                FuelCapacity = "80L",
+                Altered = false,
+                Notes = "Heavy-duty transport vehicle"
+            },
+            new VehicleType
+            {
+                Id = suvTypeId,
+                TypeName = "Equipment",
+                Category = "Construction",
+                Division = "Excavator",
+                SubDivision = "Hydraulic",
+                ChassisNo = null,
+                EngineNo = null,
+                SeatsNo = "1",
+                NomberOfCylinder = "8",
+                DoorsNo = "1",
+                Color = "Yellow",
+                TransmissionType = "Hydraulic",
+                SteeringType = "Joystick",
+                FuelType = "Diesel",
+                FuelCapacity = "200L",
+                Altered = false,
+                Notes = "Used for construction projects"
+            }
             );
 
             modelBuilder.Entity<Location>().HasData(

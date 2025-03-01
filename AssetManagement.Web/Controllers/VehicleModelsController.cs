@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AssetManagement.Domain.Entities;
 using AssetManagement.Infrastrucuture.Data;
+using AssetManagement.Web.DTOs;
 
 namespace AssetManagement.Web.Controllers
 {
@@ -57,17 +58,28 @@ namespace AssetManagement.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ModelName,ModelYear,BrandId,Id,CreatedDate,UpdatedDate")] VehicleModel vehicleModel)
+        public async Task<IActionResult> Create([Bind("ModelName,ModelYear,BrandId,Id")] VehicleModelDto modelDto)
         {
             if (ModelState.IsValid)
             {
-                vehicleModel.Id = Guid.NewGuid();
-                _context.Add(vehicleModel);
+                var brandExists = await _context.VehicleBrands.FirstAsync(b => b.Id == modelDto.BrandId);
+                
+
+                var vehicleModel = new VehicleModel
+                {
+                    Id = Guid.NewGuid(), // Assign a new unique ID
+                    ModelName = modelDto.ModelName,
+                    ModelYear = modelDto.ModelYear,
+                    BrandId = modelDto.BrandId,
+                    Brand = brandExists
+                };
+
+                _context.VehicleModels.Add(vehicleModel);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BrandId"] = new SelectList(_context.VehicleBrands, "Id", "Category", vehicleModel.BrandId);
-            return View(vehicleModel);
+            ViewData["BrandId"] = new SelectList(_context.VehicleBrands, "Id", "Category", modelDto.BrandId);
+            return View(modelDto);
         }
 
         // GET: VehicleModels/Edit/5
@@ -83,8 +95,18 @@ namespace AssetManagement.Web.Controllers
             {
                 return NotFound();
             }
+
+            var vehicleModelDto = new VehicleModelDto
+            {
+                ModelName = vehicleModel.ModelName,
+                ModelYear = vehicleModel.ModelYear,
+                BrandId = vehicleModel.BrandId,
+               
+            };
+
+
             ViewData["BrandId"] = new SelectList(_context.VehicleBrands, "Id", "Category", vehicleModel.BrandId);
-            return View(vehicleModel);
+            return View(vehicleModelDto);
         }
 
         // POST: VehicleModels/Edit/5
@@ -92,35 +114,63 @@ namespace AssetManagement.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("ModelName,ModelYear,BrandId,Id,CreatedDate,UpdatedDate")] VehicleModel vehicleModel)
+        public async Task<IActionResult> Edit(Guid id, [Bind("ModelName,ModelYear,BrandId,Id")] VehicleModelDto _data)
         {
-            if (id != vehicleModel.Id)
+            if (id != _data.Id)
             {
-                return NotFound();
+                return NotFound(); // Return NotFound if the ID doesn't match
             }
 
             if (ModelState.IsValid)
             {
                 try
                 {
+                    // Fetch the existing VehicleModel from the database
+                    var vehicleModel = await _context.VehicleModels
+                        .FirstOrDefaultAsync(vm => vm.Id == id);
+
+                    if (vehicleModel == null)
+                    {
+                        return NotFound(); // If the vehicle model is not found, return NotFound
+                    }
+
+                    // Check if the brand exists
+                    var brandExists = await _context.VehicleBrands
+                        .FirstOrDefaultAsync(b => b.Id == _data.BrandId);
+
+                    if (brandExists == null)
+                    {
+                        ModelState.AddModelError("BrandId", "The selected brand does not exist.");
+                        return View(_data); // If the brand does not exist, return the view with an error
+                    }
+
+                    // Update the properties of the existing VehicleModel
+                    vehicleModel.ModelName = _data.ModelName;
+                    vehicleModel.ModelYear = _data.ModelYear;
+                    vehicleModel.BrandId = _data.BrandId;
+                    vehicleModel.Brand = brandExists;
+
+                    // Mark the entity as modified and save changes
                     _context.Update(vehicleModel);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!VehicleModelExists(vehicleModel.Id))
+                    if (!VehicleModelExists(_data.Id))
                     {
-                        return NotFound();
+                        return NotFound(); // Handle the concurrency error and check if the entity exists
                     }
                     else
                     {
-                        throw;
+                        throw; // Rethrow the error if the issue persists
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index)); // Redirect to the Index view after successful update
             }
-            ViewData["BrandId"] = new SelectList(_context.VehicleBrands, "Id", "Category", vehicleModel.BrandId);
-            return View(vehicleModel);
+
+            // Populate the view with existing data if the model state is not valid
+            ViewData["BrandId"] = new SelectList(_context.VehicleBrands, "Id", "Category", _data.BrandId);
+            return View(_data); // Return the view with the model data
         }
 
         // GET: VehicleModels/Delete/5

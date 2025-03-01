@@ -8,10 +8,10 @@ namespace AssetManagement.Domain.Entities
 {
     public class VehicleBrand : BaseEntity
     {
-        public string Name { get; set; }
-        public string Category { get; set; }
-        public string Division { get; set; }
-        public string SubDivision { get; set; }
+        public string Name { get; set; } //Howo T5G SinoTruck
+        public string Category { get; set; } // Sinotruck
+        public string Division { get; set; } // Howo
+        public string SubDivision { get; set; } //T5G
         
 
         public ICollection<VehicleModel> Models { get; set; } = [];

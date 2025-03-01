@@ -9,9 +9,8 @@ namespace AssetManagement.Domain.Entities
     public class Driver : BaseEntity
     {
         public string Name { get; set; }
-        public string ContactNumber { get; set; }
-        public Guid? AssignedVehicleId { get; set; }
-        public Vehicle? AssignedVehicle { get; set; } = null;
-        public ICollection<DriverCertification> Certifications { get; set; } = [];
+        public string ContactNumber { get; set; }       
+   
+        public ICollection<DriverSafetyCompliance> SafetyCompliances { get; set; } = [];
     }
 }
