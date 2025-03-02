@@ -4,6 +4,7 @@ using AssetManagement.Infrastrucuture.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AssetManagement.Infrastrucuture.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250301170335_Co2StandardChnageToString")]
+    partial class Co2StandardChnageToString
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -405,21 +408,26 @@ namespace AssetManagement.Infrastrucuture.Migrations
                     b.Property<Guid>("BrandId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ChassisNo")
+                    b.Property<string>("Co2Standard")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Co2Standard")
+                    b.Property<string>("ContactInCharge")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CostCenter")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("CurrentDriverAssignedOn")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("CurrentStattionlStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DivisionName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -432,10 +440,6 @@ namespace AssetManagement.Infrastrucuture.Migrations
 
                     b.Property<decimal>("EngineCo2Emission")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("EngineNo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("EstimatedEndOfTermValue")
                         .HasColumnType("decimal(18,2)");
@@ -452,6 +456,10 @@ namespace AssetManagement.Infrastrucuture.Migrations
                     b.Property<Guid?>("LocationId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("LocationName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("MaintenanceStatus")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -467,6 +475,10 @@ namespace AssetManagement.Infrastrucuture.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PlateNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProjectName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -643,10 +655,6 @@ namespace AssetManagement.Infrastrucuture.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ModelNo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("ModelYear")
                         .HasColumnType("int");
 
@@ -665,7 +673,6 @@ namespace AssetManagement.Infrastrucuture.Migrations
                             Id = new Guid("f17a7c8d-4a3b-4b81-b1e6-8d97b0f1a8c9"),
                             BrandId = new Guid("9497f582-8512-443f-a457-0fb2b807656b"),
                             ModelName = "Corolla",
-                            ModelNo = "",
                             ModelYear = 2023
                         },
                         new
@@ -673,7 +680,6 @@ namespace AssetManagement.Infrastrucuture.Migrations
                             Id = new Guid("d91e3b7a-5c8e-4f72-a4d7-6c92b3d8a7e9"),
                             BrandId = new Guid("a479fb2c-b478-441a-b950-11635ac696a7"),
                             ModelName = "Civic",
-                            ModelNo = "",
                             ModelYear = 2022
                         },
                         new
@@ -681,7 +687,6 @@ namespace AssetManagement.Infrastrucuture.Migrations
                             Id = new Guid("e8b2c7d6-3a9e-4b5f-bd17-2f3c9a7e6b8a"),
                             BrandId = new Guid("1885aa2b-fd41-475b-863a-d55efca9f4d3"),
                             ModelName = "F-150",
-                            ModelNo = "",
                             ModelYear = 2024
                         });
                 });
@@ -864,7 +869,7 @@ namespace AssetManagement.Infrastrucuture.Migrations
             modelBuilder.Entity("AssetManagement.Domain.Entities.SafetyEquipment", b =>
                 {
                     b.HasOne("AssetManagement.Domain.Entities.Vehicle", "Vehicle")
-                        .WithMany("SafetyEquipments")
+                        .WithMany()
                         .HasForeignKey("VehicleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -893,7 +898,8 @@ namespace AssetManagement.Infrastrucuture.Migrations
 
                     b.HasOne("AssetManagement.Domain.Entities.Location", "Location")
                         .WithMany()
-                        .HasForeignKey("LocationId");
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("AssetManagement.Domain.Entities.VehicleModel", "Model")
                         .WithMany()
@@ -957,8 +963,6 @@ namespace AssetManagement.Infrastrucuture.Migrations
                     b.Navigation("MaintenanceRecords");
 
                     b.Navigation("Permits");
-
-                    b.Navigation("SafetyEquipments");
                 });
 
             modelBuilder.Entity("AssetManagement.Domain.Entities.VehicleBrand", b =>

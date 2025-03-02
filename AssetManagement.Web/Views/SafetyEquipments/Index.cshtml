@@ -1,4 +1,4 @@
-﻿@model IEnumerable<AssetManagement.Domain.Entities.VehicleModel>
+﻿@model IEnumerable<AssetManagement.Domain.Entities.SafetyEquipment>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,16 +13,16 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.ModelName)
+                @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ModelYear)
+                @Html.DisplayNameFor(model => model.InstalledDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ModelNo)
-            </th> 
+                @Html.DisplayNameFor(model => model.Purpose)
+            </th>
             <th>
-                @Html.DisplayNameFor(model => model.Brand)
+                @Html.DisplayNameFor(model => model.Vehicle)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.CreatedDate)
@@ -37,16 +37,16 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.ModelName)
+                @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ModelYear)
+                @Html.DisplayFor(modelItem => item.InstalledDate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ModelNo)
+                @Html.DisplayFor(modelItem => item.Purpose)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Brand.Category)
+                @Html.DisplayFor(modelItem => item.Vehicle.ChassisNo)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CreatedDate)

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<AssetManagement.Domain.Entities.VehicleModel>
+﻿@model IEnumerable<AssetManagement.Domain.Entities.DriverSafetyCompliance>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,16 +13,19 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.ModelName)
+                @Html.DisplayNameFor(model => model.Driver)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ModelYear)
+                @Html.DisplayNameFor(model => model.SafetyCriteria)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ModelNo)
-            </th> 
+                @Html.DisplayNameFor(model => model.DateCompleted)
+            </th>
             <th>
-                @Html.DisplayNameFor(model => model.Brand)
+                @Html.DisplayNameFor(model => model.ExpiryDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsCertified)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.CreatedDate)
@@ -37,16 +40,19 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.ModelName)
+                @Html.DisplayFor(modelItem => item.Driver.ContactNumber)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ModelYear)
+                @Html.DisplayFor(modelItem => item.SafetyCriteria.CriteriaName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ModelNo)
+                @Html.DisplayFor(modelItem => item.DateCompleted)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Brand.Category)
+                @Html.DisplayFor(modelItem => item.ExpiryDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsCertified)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CreatedDate)

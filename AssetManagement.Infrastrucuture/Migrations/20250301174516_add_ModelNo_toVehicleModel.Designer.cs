@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AssetManagement.Infrastrucuture.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250301063657_update-tables")]
-    partial class updatetables
+    [Migration("20250301174516_add_ModelNo_toVehicleModel")]
+    partial class add_ModelNo_toVehicleModel
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -91,9 +91,6 @@ namespace AssetManagement.Infrastrucuture.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("AssignedVehicleId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("ContactNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -110,47 +107,7 @@ namespace AssetManagement.Infrastrucuture.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AssignedVehicleId")
-                        .IsUnique()
-                        .HasFilter("[AssignedVehicleId] IS NOT NULL");
-
                     b.ToTable("Drivers");
-                });
-
-            modelBuilder.Entity("AssetManagement.Domain.Entities.DriverCertification", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("CertificationName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("DriverId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("ExpiryDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("IssuedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("IssuedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DriverId");
-
-                    b.ToTable("DriverCertifications");
                 });
 
             modelBuilder.Entity("AssetManagement.Domain.Entities.DriverSafetyCompliance", b =>
@@ -186,7 +143,7 @@ namespace AssetManagement.Infrastrucuture.Migrations
 
                     b.HasIndex("SafetyCriteriaId");
 
-                    b.ToTable("DriverSafetyCompliance");
+                    b.ToTable("DriverSafetyCompliances");
                 });
 
             modelBuilder.Entity("AssetManagement.Domain.Entities.InspectionRecord", b =>
@@ -214,7 +171,7 @@ namespace AssetManagement.Infrastrucuture.Migrations
 
                     b.HasIndex("VehicleId");
 
-                    b.ToTable("InspectionRecords");
+                    b.ToTable("InspectionRecord");
                 });
 
             modelBuilder.Entity("AssetManagement.Domain.Entities.Location", b =>
@@ -333,7 +290,7 @@ namespace AssetManagement.Infrastrucuture.Migrations
 
                     b.HasIndex("VehicleId");
 
-                    b.ToTable("MaintenanceRecords");
+                    b.ToTable("MaintenanceRecord");
                 });
 
             modelBuilder.Entity("AssetManagement.Domain.Entities.Permit", b =>
@@ -344,6 +301,10 @@ namespace AssetManagement.Infrastrucuture.Migrations
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("PermitDetails")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PermitHolder")
                         .IsRequired()
@@ -399,7 +360,7 @@ namespace AssetManagement.Infrastrucuture.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SafetyCriteria");
+                    b.ToTable("SafetyCriterias");
                 });
 
             modelBuilder.Entity("AssetManagement.Domain.Entities.SafetyEquipment", b =>
@@ -447,13 +408,26 @@ namespace AssetManagement.Infrastrucuture.Migrations
                     b.Property<Guid>("BrandId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<decimal>("Co2Standard")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<string>("Co2Standard")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ContactInCharge")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CostCenter")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CurrentStattionlStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DivisionName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -482,6 +456,10 @@ namespace AssetManagement.Infrastrucuture.Migrations
                     b.Property<Guid?>("LocationId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("LocationName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("MaintenanceStatus")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -497,6 +475,10 @@ namespace AssetManagement.Infrastrucuture.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PlateNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProjectName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -525,6 +507,8 @@ namespace AssetManagement.Infrastrucuture.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AssignedDriverId");
 
                     b.HasIndex("BrandId");
 
@@ -671,6 +655,10 @@ namespace AssetManagement.Infrastrucuture.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ModelNo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("ModelYear")
                         .HasColumnType("int");
 
@@ -689,6 +677,7 @@ namespace AssetManagement.Infrastrucuture.Migrations
                             Id = new Guid("f17a7c8d-4a3b-4b81-b1e6-8d97b0f1a8c9"),
                             BrandId = new Guid("9497f582-8512-443f-a457-0fb2b807656b"),
                             ModelName = "Corolla",
+                            ModelNo = "",
                             ModelYear = 2023
                         },
                         new
@@ -696,6 +685,7 @@ namespace AssetManagement.Infrastrucuture.Migrations
                             Id = new Guid("d91e3b7a-5c8e-4f72-a4d7-6c92b3d8a7e9"),
                             BrandId = new Guid("a479fb2c-b478-441a-b950-11635ac696a7"),
                             ModelName = "Civic",
+                            ModelNo = "",
                             ModelYear = 2022
                         },
                         new
@@ -703,6 +693,7 @@ namespace AssetManagement.Infrastrucuture.Migrations
                             Id = new Guid("e8b2c7d6-3a9e-4b5f-bd17-2f3c9a7e6b8a"),
                             BrandId = new Guid("1885aa2b-fd41-475b-863a-d55efca9f4d3"),
                             ModelName = "F-150",
+                            ModelNo = "",
                             ModelYear = 2024
                         });
                 });
@@ -834,27 +825,6 @@ namespace AssetManagement.Infrastrucuture.Migrations
                         });
                 });
 
-            modelBuilder.Entity("AssetManagement.Domain.Entities.Driver", b =>
-                {
-                    b.HasOne("AssetManagement.Domain.Entities.Vehicle", "AssignedVehicle")
-                        .WithOne("AssignedDriver")
-                        .HasForeignKey("AssetManagement.Domain.Entities.Driver", "AssignedVehicleId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("AssignedVehicle");
-                });
-
-            modelBuilder.Entity("AssetManagement.Domain.Entities.DriverCertification", b =>
-                {
-                    b.HasOne("AssetManagement.Domain.Entities.Driver", "Driver")
-                        .WithMany("Certifications")
-                        .HasForeignKey("DriverId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Driver");
-                });
-
             modelBuilder.Entity("AssetManagement.Domain.Entities.DriverSafetyCompliance", b =>
                 {
                     b.HasOne("AssetManagement.Domain.Entities.Driver", "Driver")
@@ -916,6 +886,11 @@ namespace AssetManagement.Infrastrucuture.Migrations
 
             modelBuilder.Entity("AssetManagement.Domain.Entities.Vehicle", b =>
                 {
+                    b.HasOne("AssetManagement.Domain.Entities.Driver", "AssignedDriver")
+                        .WithMany()
+                        .HasForeignKey("AssignedDriverId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("AssetManagement.Domain.Entities.VehicleBrand", "Brand")
                         .WithMany()
                         .HasForeignKey("BrandId")
@@ -947,6 +922,8 @@ namespace AssetManagement.Infrastrucuture.Migrations
                     b.HasOne("AssetManagement.Domain.Entities.VehicleType", null)
                         .WithMany("Vehicles")
                         .HasForeignKey("VehicleTypeId");
+
+                    b.Navigation("AssignedDriver");
 
                     b.Navigation("Brand");
 
@@ -983,16 +960,11 @@ namespace AssetManagement.Infrastrucuture.Migrations
 
             modelBuilder.Entity("AssetManagement.Domain.Entities.Driver", b =>
                 {
-                    b.Navigation("Certifications");
-
                     b.Navigation("SafetyCompliances");
                 });
 
             modelBuilder.Entity("AssetManagement.Domain.Entities.Vehicle", b =>
                 {
-                    b.Navigation("AssignedDriver")
-                        .IsRequired();
-
                     b.Navigation("InstalledEquipment");
 
                     b.Navigation("MaintenanceRecords");

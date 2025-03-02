@@ -69,6 +69,7 @@ namespace AssetManagement.Web.Controllers
                 {
                     Id = Guid.NewGuid(), // Assign a new unique ID
                     ModelName = modelDto.ModelName,
+                    ModelNo = modelDto.ModelNo,
                     ModelYear = modelDto.ModelYear,
                     BrandId = modelDto.BrandId,
                     Brand = brandExists
@@ -101,7 +102,8 @@ namespace AssetManagement.Web.Controllers
                 ModelName = vehicleModel.ModelName,
                 ModelYear = vehicleModel.ModelYear,
                 BrandId = vehicleModel.BrandId,
-               
+                ModelNo = vehicleModel.ModelNo,
+
             };
 
 
@@ -114,7 +116,7 @@ namespace AssetManagement.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("ModelName,ModelYear,BrandId,Id")] VehicleModelDto _data)
+        public async Task<IActionResult> Edit(Guid id, [Bind("ModelName,ModelYear,BrandId,Id,ModelNo")] VehicleModelDto _data)
         {
             if (id != _data.Id)
             {
@@ -149,6 +151,8 @@ namespace AssetManagement.Web.Controllers
                     vehicleModel.ModelYear = _data.ModelYear;
                     vehicleModel.BrandId = _data.BrandId;
                     vehicleModel.Brand = brandExists;
+                    vehicleModel.ModelNo = _data.ModelNo;
+
 
                     // Mark the entity as modified and save changes
                     _context.Update(vehicleModel);

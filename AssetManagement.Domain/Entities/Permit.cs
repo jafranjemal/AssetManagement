@@ -11,6 +11,7 @@ namespace AssetManagement.Domain.Entities
        
         public string PermitType { get; set; }
         public string PermitHolder { get; set; }
+        public string PermitDetails { get; set; }
         public DateTime ValidUntil { get; set; }
 
         

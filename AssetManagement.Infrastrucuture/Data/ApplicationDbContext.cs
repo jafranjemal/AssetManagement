@@ -19,14 +19,16 @@ namespace AssetManagement.Infrastrucuture.Data
         public DbSet<Vehicle> Vehicles { get; set; }
         public DbSet<VehicleBrand> VehicleBrands { get; set; }
         public DbSet<VehicleModel> VehicleModels { get; set; }
+        public DbSet<SafetyCriteria> SafetyCriterias { get; set; }
         public DbSet<VehicleType> VehicleTypes { get; set; }
         public DbSet<Driver> Drivers { get; set; }
         public DbSet<Location> Locations { get; set; }
         public DbSet<Permit> Permits { get; set; }
         public DbSet<SafetyEquipment> SafetyEquipments { get; set; }
-        public DbSet<SafetyCriteria> SafetyCriterias { get; set; }
-        public DbSet<MaintenanceRecord> MaintenanceRecords { get; set; }
-        public DbSet<InspectionRecord> InspectionRecords { get; set; }
+        public DbSet<DriverSafetyCompliance> DriverSafetyCompliances { get; set; }
+
+       // public DbSet<MaintenanceRecord> MaintenanceRecords { get; set; }
+       // public DbSet<InspectionRecord> InspectionRecords { get; set; }
         
 
 
@@ -79,11 +81,7 @@ namespace AssetManagement.Infrastrucuture.Data
                 .HasForeignKey(v => v.TypeId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<Vehicle>()
-                .HasOne(v => v.Location)
-                .WithMany()
-                .HasForeignKey(v => v.LocationId)
-                .OnDelete(DeleteBehavior.NoAction);
+           
 
             modelBuilder.Entity<Vehicle>()
                 .HasOne(v => v.AssignedDriver)
@@ -99,11 +97,7 @@ namespace AssetManagement.Infrastrucuture.Data
                 .OnDelete(DeleteBehavior.Cascade);
 
             // Driver relationship
-            modelBuilder.Entity<Driver>()
-                .HasOne(d => d.AssignedVehicle)
-                .WithOne(v => v.AssignedDriver)
-                .HasForeignKey<Driver>(d => d.AssignedVehicleId)
-                .OnDelete(DeleteBehavior.SetNull);
+          
  
           
 
@@ -128,12 +122,7 @@ namespace AssetManagement.Infrastrucuture.Data
                 .HasForeignKey(ir => ir.VehicleId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Driver Certification relationship
-            modelBuilder.Entity<DriverCertification>()
-                .HasOne(dc => dc.Driver)
-                .WithMany(d => d.Certifications)
-                .HasForeignKey(dc => dc.DriverId)
-                .OnDelete(DeleteBehavior.Cascade);
+       
 
 
             modelBuilder.Entity<VehicleBrand>()

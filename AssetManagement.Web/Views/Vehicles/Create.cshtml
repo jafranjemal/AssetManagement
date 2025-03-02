@@ -1,0 +1,1003 @@
+﻿@model AssetManagement.Domain.Entities.Vehicle
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<html>
+<head>
+    <title>Vehicle Asset Master (Fleet / Garage)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body class="bg-gray-100 p-8">
+    <form asp-action="Create">
+    <div class="max-w-5xl mx-auto bg-white p-8 shadow-md">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-2xl font-bold">Vehicle Asset Master (Fleet / Garage)</h1>
+            <div class="w-16 h-16 border border-black flex items-center justify-center">
+                <i class="fas fa-image text-2xl"></i>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+                <h2 class="text-lg font-semibold mb-4">Vehicle General Details</h2>
+                <div class="mb-4">
+                        <label asp-for="SystemId" for="systemId" class="block text-sm font-medium">SystemId</label>
+                    <input asp-for="SystemId" type="text" id="systemId" class="mt-1 block w-full border border-gray-300 p-2">
+                </div>
+                <div class="mb-4">
+                    <label asp-for="PlateNumber" for="plateNumber" class="block text-sm font-medium">Plate #</label>
+                    <input asp-for="PlateNumber" type="text" id="plateNumber" class="mt-1 block w-full border border-gray-300 p-2">
+                </div>
+                <div class="mb-4">
+                        <label asp-for="VehicleName" for="name" class="block text-sm font-medium">Name</label>
+                        <input asp-for="VehicleName" type="text" id="name" class="mt-1 block w-full border border-gray-300 p-2">
+                </div>
+            </div>
+
+            <div>
+                <h2 class="text-lg font-semibold mb-4">Vehicle Statuses</h2>
+                <div class="flex items-center mb-4">
+                    
+                        <label asp-for="VehicleStatus" class="text-sm font-medium">Active</label>
+                        <select id="operatizonsStatus" asp-for="VehicleStatus" class="mt-1 block w-full border border-gray-300 p-2">
+                            <option selected>Active</option>
+                            <option>Alert</option>
+                           
+                        </select>
+                </div>
+                <div class="mb-4">
+                    <label  asp-for="OperationalStatus" for="operationsStatus" class="block text-sm font-medium">Operations Status</label>
+                        <select asp-for="OperationalStatus" id="operationsStatus" class="mt-1 block w-full border border-gray-300 p-2">
+                            <option selected>On Project</option>
+                        <option>Internal</option>
+                        <option>Standby</option>
+                        <option>Replacement</option>
+                        <option>Pool</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                        <label asp-for="CurrentStattionlStatus" for="currentStationStatus" class="block text-sm font-medium">Current Station Status</label>
+                        <select asp-for="CurrentStattionlStatus" id="currentStationStatus" class="mt-1 block w-full border border-gray-300 p-2">
+                            <option selected>On Site</option>
+                        <option>On Garage</option>
+                        <option>On Yard Khor</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label asp-for="MaintenanceStatus" for="maintenanceStatus" class="block text-sm font-medium">Maintenance Status</label>
+                        <select asp-for="MaintenanceStatus" id="maintenanceStatus" class="mt-1 block w-full border border-gray-300 p-2">
+                            <option selected>Good Condition</option>
+                        <option>Minor</option>
+                        <option>Urgent</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <h2 class="text-lg font-semibold mb-4">Vehicle Brand Details</h2>
+                <div class="mb-4">
+
+                    <label asp-for="BrandId" class="block text-sm font-medium">Choose Brand</label>
+                    <select id="brandDropdown" asp-for="BrandId" class="mt-1 block w-full border border-gray-300 p-2" asp-items="ViewBag.BrandId"></select>
+
+
+                </div>
+                 
+
+                <!-- Model Selection Dropdown (Initially Hidden) -->
+                <div class="mb-4" id="modelDropdownContainer" class="hidden">
+                    <label asp-for="ModelId" for="modelDropdown" class="block text-sm font-medium">Choose Model</label>
+                        <select asp-for="ModelId" id="modelDropdown" class="mt-1 block w-full border border-gray-300 p-2">
+                        <option value="">-- Select a Model --</option>
+                    </select>
+                </div>
+
+
+
+                
+
+                <script>
+                    // Handle brand selection
+                    document.getElementById("brandDropdown").addEventListener("change", function () {
+                        var brandId = this.value;
+
+                        if (brandId) {
+                            // Fetch and populate models for the selected brand
+                            fetch(`/Vehicles/GetModelsByBrand?brandId=${brandId}`)
+                                .then(response => response.json())
+                                .then(data => {
+                                    // Populate model dropdown
+                                    const modelDropdown = document.getElementById("modelDropdown");
+                                    modelDropdown.innerHTML = "<option value=''>-- Select a Model --</option>"; // Clear existing options
+                                    data.forEach(model => {
+                                        let option = document.createElement("option");
+                                        option.value = model.id;
+                                        option.textContent = model.modelName;
+                                        modelDropdown.appendChild(option);
+                                    });
+
+                                    // Show model dropdown and brand details
+                                    //document.getElementById("modelDropdownContainer").classList.remove("hidden");
+                                   // document.getElementById("brandDetails").classList.remove("hidden");
+
+                                    // Optionally, fetch and display brand details (if not already done)
+                                    // Fetch brand details if needed
+                                    fetch(`/Vehicles/GetBrandDetails?brandId=${brandId}`)
+                                        .then(response => response.json())
+                                        .then(data => {
+                                           
+                                            document.getElementById("brandCategory").value = data.category || "N/A";
+                                            document.getElementById("brandDivision").value = data.division || "N/A";
+                                            document.getElementById("brandSubDivision").value = data.subDivision || "N/A";
+                                        });
+                                })
+                                .catch(error => console.error("Error fetching models:", error));
+                        } else {
+                            document.getElementById("modelDropdownContainer").classList.add("hidden");
+                            document.getElementById("brandDetails").classList.add("hidden");
+                        }
+                    });
+
+                    // Handle model selection
+                    document.getElementById("modelDropdown").addEventListener("change", function () {
+                        var modelId = this.value;
+
+                        if (modelId) {
+                            // Fetch and display selected model details
+                            fetch(`/Vehicles/GetModelDetails?modelId=${modelId}`)
+                                .then(response => response.json())
+                                .then(data => {
+                                    
+                                    document.getElementById("modelFullName").value = data.modelName || "N/A";
+                                    document.getElementById("modelYear").value = data.modelYear || "N/A";
+                                    document.getElementById("modelNumber").value = data.modelNo || "N/A";
+                                    document.getElementById("modelNo").value = data.modelNo || "N/A";
+                               
+
+                                    // Show model details
+                                    document.getElementById("modelDetails").classList.remove("hidden");
+                                })
+                                .catch(error => console.error("Error fetching model details:", error));
+                        } else {
+                            document.getElementById("modelDetails").classList.add("hidden");
+                        }
+                    });
+                </script>
+
+
+                <div class="mb-4">
+                    <label for="modelFullName" class="block text-sm font-medium">Model Full Name</label>
+                    <input type="text" id="modelFullName" class="mt-1 block w-full border border-gray-300 p-2">
+                </div>
+                <div class="mb-4">
+                    <label for="modelNumber" class="block text-sm font-medium">Model #</label>
+                    <input type="text" id="modelNumber" class="mt-1 block w-full border border-gray-300 p-2">
+                </div>
+                <div class="mb-4">
+                    <label for="modelYear" class="block text-sm font-medium">Model Year</label>
+                    <input type="text" id="modelYear" class="mt-1 block w-full border border-gray-300 p-2">
+                </div>
+                <div class="mb-4">
+                    <label for="brandCategory" class="block text-sm font-medium">Brand Category</label>
+                    <input id="brandCategory" class="mt-1 block w-full border border-gray-300 p-2">
+                     
+                    </input>
+                </div>
+                <div class="mb-4">
+                    <label for="brandDivision" class="block text-sm font-medium">Brand Division</label>
+                    <input id="brandDivision" class="mt-1 block w-full border border-gray-300 p-2">
+                        
+                    </input>
+                </div>
+                <div class="mb-4">
+                    <label for="brandSubDivision" class="block text-sm font-medium">Brand Sub Division</label>
+                    <input id="brandSubDivision" class="mt-1 block w-full border border-gray-300 p-2">
+                        
+                    </input>
+                </div>
+            </div>
+
+            <div class="bg-white p-8 border border-black">
+                <div class="mb-4">
+                    <h2 class="font-semibold mb-2">Engine Details</h2>
+                    <label asp-for="EngineCo2Emission" class="block font-semibold mb-2">Engine CO2 Emission (g/km)</label>
+                    <input asp-for="EngineCo2Emission" type="text" value="180" class="w-full border border-black p-2">
+                </div>
+                <div class="mb-4">
+                    <div>
+                        <label asp-for="ChassisNo" for="chassisNumber" class="block text-sm font-medium">Chassis #</label>
+                        <input asp-for="ChassisNo" type="text" id="chassisNumber" class="mt-1 block w-full border border-gray-300 p-2">
+                    </div>
+                    <div>
+                        <label asp-for="EngineNo" for="engineNumber" class="block text-sm font-medium">Engine #</label>
+                        <input asp-for="EngineNo" type="text" id="engineNumber" class="mt-1 block w-full border border-gray-300 p-2">
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="Co2Standard" class="block font-semibold mb-2">Co2 Standard</label>
+                    <input asp-for="Co2Standard" type="text" value="160 - 200 g/km" class="w-full border border-black p-2">
+                </div>
+                <div class="mb-4">
+                    <label asp-for="Horsepower" class="block font-semibold mb-2">Horsepower</label>
+                    <input asp-for="Horsepower" type="text" class="w-full border border-black p-2">
+                </div>
+                <div class="mb-4">
+                    <label asp-for="EmissionSpec" class="block font-semibold mb-2">Emission Spec</label>
+                    <input asp-for="EmissionSpec" type="text" class="w-full border border-black p-2">
+                </div>
+            </div>
+
+          
+        </div>
+
+            <div class="bg-white p-8 border border-black">
+                <h1 class="text-xl font-bold mb-4">Vehicle Type Details</h1>
+
+                  <div>
+                
+                <div class="mb-4">
+
+                    <label asp-for="TypeId" class="block text-sm font-medium">Main Type (Passenger/Transport/Equipment)</label>
+                    <select id="TypeDropdown" asp-for="TypeId" class="mt-1 block w-full border border-gray-300 p-2" asp-items="ViewBag.TypeId"></select>
+
+
+                </div>
+               
+             
+                <div class="mb-4">
+                    <label for="vehicleTypeCategory" class="block text-sm font-medium">Vehicle Type Category</label>
+                    <input disabled id="vehicleTypeCategory" class="mt-1 block w-full border border-gray-300 p-2">
+                       
+                    </input>
+                </div>
+                <div class="mb-4">
+                    <label for="vehicleTypeDivision" class="block text-sm font-medium">Vehicle Type Division</label>
+                    <input disabled id="vehicleTypeDivision" class="mt-1 block w-full border border-gray-300 p-2">
+                        
+                    </input>
+                </div>
+                <div class="mb-4">
+                    <label for="vehicleTypeSubDivision" class="block text-sm font-medium">Vehicle Type Sub Division</label>
+                    <input disabled id="vehicleTypeSubDivision" class="mt-1 block w-full border border-gray-300 p-2">
+                       
+                    </input>
+                </div>
+
+                  <script>
+                    // Handle brand selection
+                    document.getElementById("TypeDropdown").addEventListener("change", function () {
+                        var typeId = this.value;
+                        console.log("typeid ",typeId)
+                        if (typeId) {
+                            // Fetch and populate models for the selected brand
+                            fetch(`/Vehicles/GetTypeDetails?typeId=${typeId}`)
+                                .then(response => response.json())
+                                .then(data => {
+                                      
+                                    // Show  type details
+                                   // document.getElementById("modelDropdownContainer").classList.remove("hidden");
+                                  //  document.getElementById("brandDetails").classList.remove("hidden");
+
+                                    
+                                    document.getElementById("vehicleTypeCategory").value = data.category || "N/A";
+                                    document.getElementById("vehicleTypeDivision").value = data.division || "N/A";
+                                    document.getElementById("vehicleTypeSubDivision").value = data.subDivision || "N/A";
+                                    document.getElementById("vehicleTypeSeatsNo").value = data.seatsNo || "N/A";
+                                    document.getElementById("vehicleTypeNomberOfCylinder").value = data.nomberOfCylinder || "N/A";
+                                    document.getElementById("vehicleTypeDoorsNo").value = data.doorsNo || "N/A";
+                                    document.getElementById("vehicleTypeColor").value = data.color || "N/A";
+                                    document.getElementById("vehicleTypeTransmissionType").value = data.transmissionType || "N/A";
+                                    document.getElementById("vehicleTypeSteeringType").value = data.steeringType || "N/A";
+                                    document.getElementById("vehicleTypeFuelType").value = data.fuelType || "N/A";
+                                    document.getElementById("vehicleTypeFuelCapacity").value = data.fuelCapacity || "N/A";
+                                   
+                                    document.getElementById("vehicleTypeAltered").value = data.altered || "N/A";
+                                    document.getElementById("vehicleTypeNotes").value = data.notes || "N/A";
+                                    
+                                })
+                                .catch(error => console.error("Error fetching models:", error));
+                        } else {
+                          //  document.getElementById("modelDropdownContainer").classList.add("hidden");
+                          //  document.getElementById("brandDetails").classList.add("hidden");
+                        }
+                    });
+
+                    // Handle model selection
+                    document.getElementById("modelDropdown").addEventListener("change", function () {
+                        var modelId = this.value;
+
+                        if (modelId) {
+                            // Fetch and display selected model details
+                            fetch(`/Vehicles/GetModelDetails?modelId=${modelId}`)
+                                .then(response => response.json())
+                                .then(data => {
+                                    document.getElementById("modelName").textContent = data.modelName || "N/A";
+                                    document.getElementById("modelYear").textContent = data.modelYear || "N/A";
+                                    document.getElementById("modelNo").textContent = data.modelNo || "N/A";
+
+                                    // Show model details
+                                    document.getElementById("modelDetails").classList.remove("hidden");
+                                })
+                                .catch(error => console.error("Error fetching model details:", error));
+                        } else {
+                            document.getElementById("modelDetails").classList.add("hidden");
+                        }
+                    });
+                </script>
+
+
+            </div>
+       
+
+                <div class="grid grid-cols-2 gap-8">
+                    <div>
+                        <div class="mb-4">
+                            <label class="block font-semibold mb-2">Seats Number</label>
+                        <input id="vehicleTypeSeatsNo" type="text" class="w-full border border-black p-2">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block font-semibold mb-2">Doors Number</label>
+                        <input id="vehicleTypeDoorsNo" type="text" class="w-full border border-black p-2">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block font-semibold mb-2">Transmission Type</label>
+                        <input id="vehicleTypeTransmissionType" class="w-full border border-black p-2">
+                               
+                            </input>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block font-semibold mb-2">Steering Type</label>
+                        <input id="vehicleTypeSteeringType" class="w-full border border-black p-2">
+                               
+                            </input>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block font-semibold mb-2">Fuel Type</label>
+                        <input id="vehicleTypeFuelType" class="w-full border border-black p-2">
+                             
+                            </input>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block font-semibold mb-2">Altered</label>
+                        <input id="vehicleTypeAltered" type="checkbox" class="border border-black p-2">
+                        </div>
+                    <div class="mb-4">
+                        <label class="block font-semibold mb-2">Notes</label>
+                        <textarea rows="4" id="vehicleTypeNotes" class="w-full border border-black p-2"></textarea>
+                    </div>
+
+                    </div>
+                    <div>
+                        <div class="mb-4">
+                            <label class="block font-semibold mb-2">Number of Cylinder</label>
+                        <input id="vehicleTypeNomberOfCylinder" type="text" class="w-full border border-black p-2">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block font-semibold mb-2">Color</label>
+                        <input id="vehicleTypeColor" type="text" class="w-full border border-black p-2">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block font-semibold mb-2">Fuel Capacity</label>
+                        <input id="vehicleTypeFuelCapacity" type="text" class="w-full border border-black p-2">
+                        </div>
+               
+                    </div>
+                </div>
+
+                        
+
+              
+            </div>
+
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+            <div>
+                <h2 class="text-lg font-semibold mb-2">Location & Contact Details</h2>
+                <div class="mb-4">
+                    <label asp-for="Location.ContactInCharge" class="block text-sm font-medium">Contact InCharge Name</label>
+                    <input asp-for="Location.ContactInCharge" type="text" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+                </div>
+                <div class="mb-4">
+                    <label asp-for="Location.LocationName" class="block text-sm font-medium">Location Name</label>
+                    <input asp-for="Location.LocationName" type="text" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+                </div>
+                <div class="mb-4">
+                    <label asp-for="Location.ProjectName" class="block text-sm font-medium">Project Name</label>
+                    <input asp-for="Location.ProjectName" type="text" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+                </div>
+                <div class="mb-4">
+                    <label  asp-for="Location.CostCenter" class="block text-sm font-medium">Cost Center</label>
+                    <input  asp-for="Location.CostCenter" type="text" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+                </div>
+                <div class="mb-4">
+                    <label asp-for="Location.DivisionName" class="block text-sm font-medium">Division Name</label>
+                    <input asp-for="Location.DivisionName" type="text" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+                </div>
+            </div>
+            <div>
+                <h2 class="text-lg font-semibold mb-2">Driver Details</h2>
+
+                     <div class="mb-4">
+
+                    <label asp-for="AssignedDriverId" class="block text-sm font-medium">Choose Driver</label>
+                    <select id="DriverDropdown" asp-for="AssignedDriverId" class="mt-1 block w-full border border-gray-300 p-2" asp-items="ViewBag.AssignedDriverId">
+                        <option>Select driver</option>
+                    </select>
+
+                    <script>
+
+                        document.getElementById("DriverDropdown").addEventListener("change", function () {
+                            var driverId = this.value;
+
+                            if (driverId) {
+                                // Fetch and display selected model details
+                                fetch(`/Vehicles/GetDriverDetails?driverId=${driverId}`)
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        document.getElementById("driverName").value = data.name || "N/A";
+                                        document.getElementById("driverId").value = data.id || "N/A";
+                                        
+
+                                        // Show model details  document.getElementById("modelDetails").classList.remove("hidden");
+                                    })
+                                    .catch(error => console.error("Error fetching model details:", error));
+                            } else {
+                               // document.getElementById("modelDetails").classList.add("hidden");
+                            }
+                        });
+                    </script>
+
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium">Driver Id</label>
+                    <input id="driverId" type="text" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+                </div>
+
+               
+
+                <div class="mb-4">
+                    <label class="block text-sm font-medium">Driver Name</label>
+                    <input id="driverName" type="text" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+                </div>
+              
+
+                <div class="mb-4">
+                    <label asp-for="CurrentDriverAssignedOn" class="control-label"></label>
+                    <input asp-for="CurrentDriverAssignedOn" class="form-control" />
+                    <span asp-validation-for="CurrentDriverAssignedOn" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="mt-4">
+            <h2 class="text-lg font-semibold mb-2">Vehicle Permits</h2>
+            <table class="min-w-full bg-white border border-gray-300">
+                <thead>
+                    <tr>
+                        <th class="border border-gray-300 px-4 py-2">Permit #</th>
+                        <th class="border border-gray-300 px-4 py-2">Permit Holder</th>
+                        <th class="border border-gray-300 px-4 py-2">Permit Type</th>
+                        <th class="border border-gray-300 px-4 py-2">Permit Details</th>
+                        <th class="border border-gray-300 px-4 py-2">Valid Until</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @if (ViewData["Permits"] != null)
+                    {
+                        var permits = ViewData["Permits"] as List<AssetManagement.Domain.Entities.Permit>;
+                        int index = 1;
+
+                        @foreach (var permit in permits)
+                        {
+                            <tr>
+                                <td class="border border-gray-300 px-4 py-2">@index</td>
+                                <td class="border border-gray-300 px-4 py-2">@permit.PermitType</td>
+                                <td class="border border-gray-300 px-4 py-2">@permit.ValidUntil.ToString("MM/dd/yyyy")</td>
+                                <td class="border border-gray-300 px-4 py-2">@permit.PermitDetails</td>
+                                <td class="border border-gray-300 px-4 py-2"></td>
+                            </tr>
+                            index++;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center border border-gray-300 px-4 py-2">No permits available</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+       @*  <div class="mt-4">
+            <button onclick="openSafetyEquipmentModal()" class="bg-blue-500 text-white px-4 py-2 rounded">
+                Add Safety Equipment
+            </button>
+            <div id="safetyEquipmentModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center hidden">
+                <div class="bg-white p-6 rounded shadow-lg w-96">
+                    <h2 class="text-lg font-bold mb-4">Select Safety Equipment</h2>
+
+                    <div id="safetyEquipmentList">
+                        <div id="safetyEquipmentList">
+                            @if (ViewData["SafetyEquipment"] is List<AssetManagement.Domain.Entities.SafetyEquipment> equipmentList && equipmentList.Any())
+                            {
+                                foreach (var equipment in equipmentList)
+                                {
+                                    <div class="mb-2">
+                                        <input type="checkbox" id="safety-@equipment.Id" value="@equipment.Id"
+                                               data-name="@equipment.Name" class="safety-checkbox" />
+                                        <label for="safety-@equipment.Id">@equipment.Name</label>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <p class="text-gray-500 italic">No safety equipment available.</p>
+                            }
+                        </div>
+
+                    </div>
+
+                    <button onclick="addSelectedEquipment()" class="bg-green-500 text-white px-4 py-2 rounded mt-4">
+                        Add Selected
+                    </button>
+                    <button onclick="closeSafetyEquipmentModal()" class="bg-red-500 text-white px-4 py-2 rounded mt-4">
+                        Close
+                    </button>
+                </div>
+            </div>
+<script>
+               
+                    // Initialize empty vehicle object
+                    let vehicle = {
+                        SafetyEquipments: []
+                    };
+
+                function openSafetyEquipmentModal() {
+                    document.getElementById("safetyEquipmentModal").classList.remove("hidden");
+                }
+
+                function closeSafetyEquipmentModal() {
+                    document.getElementById("safetyEquipmentModal").classList.add("hidden");
+                }
+
+                function addSelectedEquipment() {
+                    // Get all checked checkboxes
+                    let selectedItems = [];
+                    document.querySelectorAll(".safety-checkbox:checked").forEach((checkbox) => {
+                        selectedItems.push({
+                            Id: checkbox.value,
+                            Name: checkbox.dataset.name
+                        });
+                    });
+
+                    // Update vehicle object
+                    vehicle.SafetyEquipments = selectedItems;
+
+                    // Debugging: Show in console
+                    console.log("Updated vehicle:", vehicle);
+
+                    // Close modal
+                    closeSafetyEquipmentModal();
+                }
+         
+
+
+</script>
+
+
+            <h2 class="text-lg font-semibold mb-2">Special essential, safety and operational feature items fitted</h2>
+            <table class="min-w-full bg-white border border-gray-300">
+                <thead>
+                    <tr>
+                        <th class="border border-gray-300 px-4 py-2">Sl</th>
+                        <th class="border border-gray-300 px-4 py-2">Equipment Name</th>
+                        <th class="border border-gray-300 px-4 py-2">Installed Date</th>
+                        <th class="border border-gray-300 px-4 py-2">Purpose</th>
+                        <th class="border border-gray-300 px-4 py-2">Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="border border-gray-300 px-4 py-2">1</td>
+                        <td class="border border-gray-300 px-4 py-2">Spark Arrester</td>
+                        <td class="border border-gray-300 px-4 py-2">01/15/2023</td>
+                        <td class="border border-gray-300 px-4 py-2">Prevents ignition in flammable environments</td>
+                        <td class="border border-gray-300 px-4 py-2"></td>
+                    </tr>
+                    <tr>
+                        <td class="border border-gray-300 px-4 py-2">2</td>
+                        <td class="border border-gray-300 px-4 py-2">Double-Walled Tank</td>
+                        <td class="border border-gray-300 px-4 py-2">05/10/2023</td>
+                        <td class="border border-gray-300 px-4 py-2">Provides extra containment for liquids</td>
+                        <td class="border border-gray-300 px-4 py-2"></td>
+                    </tr>
+                    <tr>
+                        <td class="border border-gray-300 px-4 py-2">3</td>
+                        <td class="border border-gray-300 px-4 py-2">Emergency Shutoff Valve</td>
+                        <td class="border border-gray-300 px-4 py-2">06/01/2023</td>
+                        <td class="border border-gray-300 px-4 py-2">Quickly stops flow of hazardous materials</td>
+                        <td class="border border-gray-300 px-4 py-2"></td>
+                    </tr>
+                    <tr>
+                        <td class="border border-gray-300 px-4 py-2">4</td>
+                        <td class="border border-gray-300 px-4 py-2">Leak Detection Sensor</td>
+                        <td class="border border-gray-300 px-4 py-2">09/05/2023</td>
+                        <td class="border border-gray-300 px-4 py-2">Alerts operator to leaks/spills</td>
+                        <td class="border border-gray-300 px-4 py-2"></td>
+                    </tr>
+                    <tr>
+                        <td class="border border-gray-300 px-4 py-2">5</td>
+                        <td class="border border-gray-300 px-4 py-2">Explosion-Proof Lighting</td>
+                        <td class="border border-gray-300 px-4 py-2">01/18/2024</td>
+                        <td class="border border-gray-300 px-4 py-2">Safe illumination in flammable zones</td>
+                        <td class="border border-gray-300 px-4 py-2"></td>
+                    </tr>
+                    <tr>
+                        <td class="border border-gray-300 px-4 py-2">6</td>
+                        <td class="border border-gray-300 px-4 py-2">Spill Containment Kit</td>
+                        <td class="border border-gray-300 px-4 py-2">03/18/2024</td>
+                        <td class="border border-gray-300 px-4 py-2">Quick response for minor leaks/spills</td>
+                        <td class="border border-gray-300 px-4 py-2"></td>
+                    </tr>
+                    <tr>
+                        <td class="border border-gray-300 px-4 py-2">7</td>
+                        <td class="border border-gray-300 px-4 py-2">GPS Monitoring System</td>
+                        <td class="border border-gray-300 px-4 py-2">04/25/2024</td>
+                        <td class="border border-gray-300 px-4 py-2">Tracks vehicle location/route</td>
+                        <td class="border border-gray-300 px-4 py-2"></td>
+                    </tr>
+                    <tr>
+                        <td class="border border-gray-300 px-4 py-2">8</td>
+                        <td class="border border-gray-300 px-4 py-2">Camera Surveillance</td>
+                        <td class="border border-gray-300 px-4 py-2">06/10/2024</td>
+                        <td class="border border-gray-300 px-4 py-2">Monitors loading/unloading processes</td>
+                        <td class="border border-gray-300 px-4 py-2"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+         *@
+
+        
+         <script>
+    document.getElementById("DriverDropdown").addEventListener("change", function () {
+        var driverId = this.value;
+
+        if (driverId) {
+            // Fetch and display selected driver's safety compliance data
+            fetch(`/Vehicles/GetDriverSafetyCompliance?driverId=${driverId}`)
+                .then(response => response.json())
+                .then(data => {
+                    let tbody = document.getElementById("safetyComplianceTableBody");
+                    tbody.innerHTML = ""; // Clear previous data
+
+                    if (data.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="5" class="text-center text-gray-500">No safety compliance records found.</td></tr>`;
+                    } else {
+                        data.forEach((compliance, index) => {
+                            let row = `
+                                <tr>
+                                    <td class="border border-gray-300 px-4 py-2">${index + 1}</td>
+                                    <td class="border border-gray-300 px-4 py-2">${compliance.criteriaName || "N/A"}</td>
+                                    <td class="border border-gray-300 px-4 py-2">${new Date(compliance.dateCompleted).toLocaleDateString()}</td>
+                                    <td class="border border-gray-300 px-4 py-2">${compliance.purpose || "N/A"}</td>
+                                    <td class="border border-gray-300 px-4 py-2">${compliance.notes || "N/A"}</td>
+                                </tr>
+                            `;
+                            tbody.innerHTML += row;
+                        });
+                    }
+
+                    // Show model details
+                    //document.getElementById("modelDetails").classList.remove("hidden");
+                })
+                .catch(error => console.error("Error fetching driver safety compliance:", error));
+        } else {
+            //document.getElementById("modelDetails").classList.add("hidden");
+        }
+    });
+</script>
+
+
+         <div class="mt-4">
+            <h2 class="text-lg font-semibold mb-2">
+                Driver Eligibility Criteria (Ensure Driver Before Assigning)
+            </h2>
+            <table class="min-w-full bg-white border border-gray-300">
+                <thead>
+                    <tr>
+                        <th class="border border-gray-300 px-4 py-2">Sl</th>
+                        <th class="border border-gray-300 px-4 py-2">Criteria Name</th>
+                        <th class="border border-gray-300 px-4 py-2">Required By</th>
+                        <th class="border border-gray-300 px-4 py-2">Purpose</th>
+                        <th class="border border-gray-300 px-4 py-2">Notes</th>
+                    </tr>
+                </thead>
+                
+                <tbody id="safetyComplianceTableBody">
+                    
+                </tbody>
+
+                
+            </table>
+        </div>
+
+        <!-- Documentation -->
+        <div class="max-w-4xl mx-auto bg-white p-6 border border-gray-300">
+            <h1 class="text-xl font-bold mb-4">Documentation Details</h1>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label asp-for="DocumentationDetails.RoadPermitExpiry"  class="block mb-2">Road Permit Expiry</label>
+                    <input asp-for="DocumentationDetails.RoadPermitExpiry"   class="w-full border border-gray-400 p-2 mb-4">
+                </div>
+                <div>
+                    <label asp-for="DocumentationDetails.InsuranceExpiry" class="block mb-2">Insurance Expiry</label>
+                    <input asp-for="DocumentationDetails.InsuranceExpiry"   class="w-full border border-gray-400 p-2 mb-4">
+                </div>
+                <div>
+                    <label class="block mb-2">Duplicate Key Serial#</label>
+                    <div class="relative">
+                        <input asp-for="DocumentationDetails.DuplicateKeySerialNo" type="text" class="w-full border border-gray-400 p-2 pr-8">
+
+                        <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                            <i class="fas fa-caret-down"></i>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <label asp-for="DocumentationDetails.FileNo" class="block mb-2">File #</label>
+                    <input asp-for="DocumentationDetails.FileNo" type="text" class="w-full border border-gray-400 p-2 mb-4">
+                </div>
+                <div class="col-span-2 border-t border-gray-300 my-4"></div>
+                <div>
+                    <label asp-for="DocumentationDetails.GPS_GSM" class="block mb-2">GPS GSM #</label>
+                    <input asp-for="DocumentationDetails.GPS_GSM" type="text" class="w-full border border-gray-400 p-2 mb-4">
+                </div>
+                <div>
+                    <label asp-for="DocumentationDetails.GPS_ID" class="block mb-2">GPS ID #</label>
+                    <input asp-for="DocumentationDetails.GPS_ID"  type="text" class="w-full border border-gray-400 p-2 mb-4">
+                </div>
+                <div>
+                    <label asp-for="DocumentationDetails.GPSType" class="block mb-2">GPS Type</label>
+                    <div class="relative">
+                        <select asp-for="DocumentationDetails.GPSType" class="w-full border border-gray-400 p-2 pr-8">
+                            <option>Normal Tracker</option>
+                            <option>IVMS Full</option>
+                            <option>IVMS Partial</option>
+                        </select>
+                        <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                            <i class="fas fa-caret-down"></i>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <label asp-for="DocumentationDetails.GPSServiceVendorName" class="block mb-2">GPS Service Vendor</label>
+                    <div class="relative">
+                        <input asp-for="DocumentationDetails.GPSServiceVendorName" class="w-full border border-gray-400 p-2 pr-8">
+                          
+                        </input>
+                        <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                            <i class="fas fa-caret-down"></i>
+                        </div>
+                    </div>
+                </div>
+               
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                <div>
+                    <label asp-for="DocumentationDetails.YearMade" class="block mb-2">Year Made</label>
+                    <input asp-for="DocumentationDetails.YearMade" type="text" class="w-full border border-gray-400 p-2 mb-4">
+                </div>
+                <div>
+                    <label asp-for="DocumentationDetails.OwnershipStatus"  class="block mb-2">OwnerShip Status</label>
+                    <div class="relative">
+                        <input asp-for="DocumentationDetails.OwnershipStatus" type="text" class="w-full border border-gray-400 p-2 pr-8">
+                        <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                            <i class="fas fa-caret-down"></i>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <label asp-for="DocumentationDetails.MadeIn" class="block mb-2">Made In</label>
+                    <div class="relative">
+                        <input asp-for="DocumentationDetails.MadeIn" type="text" class="w-full border border-gray-400 p-2 pr-8">
+                        <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                            <i class="fas fa-caret-down"></i>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <label asp-for="DocumentationDetails.LastOdometer" class="block mb-2">Last Odometer</label>
+                    <input asp-for="DocumentationDetails.LastOdometer" type="text" class="w-full border border-gray-400 p-2 mb-4">
+                </div>
+                <div>
+                    <label asp-for="DocumentationDetails.FirstRegisteredWithUsOn" class="block mb-2">First Registered with us on</label>
+                        <input asp-for="DocumentationDetails.FirstRegisteredWithUsOn" type="date" class="w-full border border-gray-400 p-2 mb-4">
+                </div>
+                <div>
+                    <label asp-for="DocumentationDetails.CancellationDate" class="block mb-2">Cancellation Date</label>
+                    <input asp-for="DocumentationDetails.CancellationDate" type="date" class="w-full border border-gray-400 p-2 mb-4">
+                </div>
+                <div class="col-span-2 border-t border-gray-300 my-4"></div>
+                <div>
+                    <label asp-for="InitialManufacturerPrice" class="block mb-2">Initial Manufacture's Price (Brand New)</label>
+                    <input asp-for="InitialManufacturerPrice" type="text" class="w-full border border-gray-400 p-2 mb-4">
+                </div>     
+                <div>       
+                    <label asp-for="PurchaseValue" class="block mb-2">Our Purchase Value</label>
+                    <input asp-for="PurchaseValue" type="text" class="w-full border border-gray-400 p-2 mb-4">
+                </div>       
+                <div>        
+                    <label asp-for="EstimatedEndOfTermValue" class="block mb-2">Estimated End Of Term Value</label>
+                    <input asp-for="EstimatedEndOfTermValue" type="text" class="w-full border border-gray-400 p-2 mb-4">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Create" class="btn btn-primary" />
+        </div>
+    </div>
+    </form>
+</body>
+</html>
+
+@* <div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="SystemId" class="control-label"></label>
+                <input asp-for="SystemId" class="form-control" />
+                <span asp-validation-for="SystemId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PlateNumber" class="control-label"></label>
+                <input asp-for="PlateNumber" class="form-control" />
+                <span asp-validation-for="PlateNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CurrentDriverAssignedOn" class="control-label"></label>
+                <input asp-for="VehicleName" class="form-control" />
+                <span asp-validation-for="VehicleName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="VehicleStatus" class="control-label"></label>
+                <input asp-for="VehicleStatus" class="form-control" />
+                <span asp-validation-for="VehicleStatus" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OperationalStatus" class="control-label"></label>
+                <input asp-for="OperationalStatus" class="form-control" />
+                <span asp-validation-for="OperationalStatus" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CurrentStattionlStatus" class="control-label"></label>
+                <input asp-for="CurrentStattionlStatus" class="form-control" />
+                <span asp-validation-for="CurrentStattionlStatus" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MaintenanceStatus" class="control-label"></label>
+                <input asp-for="MaintenanceStatus" class="form-control" />
+                <span asp-validation-for="MaintenanceStatus" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EngineCo2Emission" class="control-label"></label>
+                <input asp-for="EngineCo2Emission" class="form-control" />
+                <span asp-validation-for="EngineCo2Emission" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Co2Standard" class="control-label"></label>
+                <input asp-for="Co2Standard" class="form-control" />
+                <span asp-validation-for="Co2Standard" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Horsepower" class="control-label"></label>
+                <input asp-for="Horsepower" class="form-control" />
+                <span asp-validation-for="Horsepower" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EmissionSpec" class="control-label"></label>
+                <input asp-for="EmissionSpec" class="form-control" />
+                <span asp-validation-for="EmissionSpec" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LocationName" class="control-label"></label>
+                <input asp-for="LocationName" class="form-control" />
+                <span asp-validation-for="LocationName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ContactInCharge" class="control-label"></label>
+                <input asp-for="ContactInCharge" class="form-control" />
+                <span asp-validation-for="ContactInCharge" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProjectName" class="control-label"></label>
+                <input asp-for="ProjectName" class="form-control" />
+                <span asp-validation-for="ProjectName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CostCenter" class="control-label"></label>
+                <input asp-for="CostCenter" class="form-control" />
+                <span asp-validation-for="CostCenter" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DivisionName" class="control-label"></label>
+                <input asp-for="DivisionName" class="form-control" />
+                <span asp-validation-for="DivisionName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="InitialManufacturerPrice" class="control-label"></label>
+                <input asp-for="InitialManufacturerPrice" class="form-control" />
+                <span asp-validation-for="InitialManufacturerPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PurchaseValue" class="control-label"></label>
+                <input asp-for="PurchaseValue" class="form-control" />
+                <span asp-validation-for="PurchaseValue" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EstimatedEndOfTermValue" class="control-label"></label>
+                <input asp-for="EstimatedEndOfTermValue" class="form-control" />
+                <span asp-validation-for="EstimatedEndOfTermValue" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TypeId" class="control-label"></label>
+                <select asp-for="TypeId" class ="form-control" asp-items="ViewBag.TypeId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="LocationId" class="control-label"></label>
+                <select asp-for="LocationId" class ="form-control" asp-items="ViewBag.LocationId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="AssignedDriverId" class="control-label"></label>
+                <select asp-for="AssignedDriverId" class ="form-control" asp-items="ViewBag.AssignedDriverId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="BrandId" class="control-label"></label>
+                <select asp-for="BrandId" class ="form-control" asp-items="ViewBag.BrandId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="ModelId" class="control-label"></label>
+                <select asp-for="ModelId" class ="form-control" asp-items="ViewBag.ModelId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastInspection" class="control-label"></label>
+                <input asp-for="LastInspection" class="form-control" />
+                <span asp-validation-for="LastInspection" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NextInspection" class="control-label"></label>
+                <input asp-for="NextInspection" class="form-control" />
+                <span asp-validation-for="NextInspection" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreatedDate" class="control-label"></label>
+                <input asp-for="CreatedDate" class="form-control" />
+                <span asp-validation-for="CreatedDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UpdatedDate" class="control-label"></label>
+                <input asp-for="UpdatedDate" class="form-control" />
+                <span asp-validation-for="UpdatedDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+ *@
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

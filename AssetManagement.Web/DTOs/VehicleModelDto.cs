@@ -5,6 +5,7 @@
         {
         public Guid Id { get; set; }
         public string ModelName { get; set; }
+        public string ModelNo { get; set; }
             public int ModelYear { get; set; }
             public Guid BrandId { get; set; } // This must match an existing VehicleBrand ID
         }

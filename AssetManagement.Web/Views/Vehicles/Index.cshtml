@@ -1,0 +1,174 @@
+﻿@model IEnumerable<AssetManagement.Domain.Entities.Vehicle>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.SystemId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PlateNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VehicleName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VehicleStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OperationalStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CurrentStattionlStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MaintenanceStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EngineCo2Emission)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Co2Standard)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Horsepower)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EmissionSpec)
+            </th>
+            
+            
+          
+            <th>
+                @Html.DisplayNameFor(model => model.InitialManufacturerPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PurchaseValue)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EstimatedEndOfTermValue)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Location)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AssignedDriver)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastInspection)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NextInspection)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Brand)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Model)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdatedDate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.SystemId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PlateNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VehicleName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VehicleStatus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OperationalStatus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CurrentStattionlStatus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaintenanceStatus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EngineCo2Emission)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Co2Standard)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Horsepower)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmissionSpec)
+            </td>
+           
+            
+           
+           
+            <td>
+                @Html.DisplayFor(modelItem => item.InitialManufacturerPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PurchaseValue)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EstimatedEndOfTermValue)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type.Category)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Location.ContactInCharge)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AssignedDriver.ContactNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastInspection)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NextInspection)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Brand.Category)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Model.ModelName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdatedDate)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

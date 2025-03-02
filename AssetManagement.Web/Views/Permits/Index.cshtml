@@ -1,4 +1,4 @@
-﻿@model IEnumerable<AssetManagement.Domain.Entities.VehicleModel>
+﻿@model IEnumerable<AssetManagement.Domain.Entities.Permit>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,16 +13,16 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.ModelName)
+                @Html.DisplayNameFor(model => model.PermitType)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ModelYear)
+                @Html.DisplayNameFor(model => model.PermitHolder)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ModelNo)
-            </th> 
+                @Html.DisplayNameFor(model => model.PermitDetails)
+            </th>
             <th>
-                @Html.DisplayNameFor(model => model.Brand)
+                @Html.DisplayNameFor(model => model.ValidUntil)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.CreatedDate)
@@ -37,16 +37,16 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.ModelName)
+                @Html.DisplayFor(modelItem => item.PermitType)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ModelYear)
+                @Html.DisplayFor(modelItem => item.PermitHolder)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ModelNo)
+                @Html.DisplayFor(modelItem => item.PermitDetails)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Brand.Category)
+                @Html.DisplayFor(modelItem => item.ValidUntil)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CreatedDate)

@@ -14,22 +14,27 @@ namespace AssetManagement.Domain.Entities
 
         public string VehicleStatus { get; set; } // Active, Alert
         public string OperationalStatus { get; set; } // On Project, Internal, Standby, Replacement, Pool
-        public string CurrentStattionlStatus { get; set; } // On Site/On Garage / On Yard Khor
+        public string CurrentStattionlStatus { get; set; } = "On SIte"; // On Site/On Garage / On Yard Khor
         public string MaintenanceStatus { get; set; } // Good Condition, Minor , Urgent
 
 
-       
+
 
         //Engine Details
         public decimal EngineCo2Emission { get; set; }  // 180
-        public decimal Co2Standard { get; set; }  // 160-200
+        public string Co2Standard { get; set; }  // 160-200
         public int Horsepower { get; set; }
         public string EmissionSpec { get; set; }
-
+        public string ChassisNo { get; set; }
+        public string EngineNo { get; set; }
+         
 
 
         //DocumentationDetails
         public DocumentationDetails DocumentationDetails { get; set; }
+
+        //Location
+        public Location? Location { get; set; }
 
         //VehicleFinance 
         public decimal InitialManufacturerPrice { get; set; }  // Brand new price
@@ -37,33 +42,36 @@ namespace AssetManagement.Domain.Entities
         public decimal EstimatedEndOfTermValue { get; set; }  // Depreciated value
 
         public Guid? TypeId { get; set; }
-        public Guid? LocationId { get; set; }
+
+        
         public Guid? AssignedDriverId { get; set; }
 
-        public VehicleType Type { get; set; }
-        public Location Location { get; set; }
-        public Driver AssignedDriver { get; set; }
+        public VehicleType? Type { get; set; }
+    
+        public Driver? AssignedDriver { get; set; }
         public ICollection<Permit> Permits { get; set; } = [];
-       // public ICollection<SafetyEquipment> SafetyEquipments { get; set; }
+         
         public ICollection<VehicleEquipment> InstalledEquipment { get; set; } = [];
-
+        public ICollection<SafetyEquipment> SafetyEquipments { get; set; } = new List<SafetyEquipment>();
 
         public Guid BrandId { get; set; }
         public Guid ModelId { get; set; }
-       
-         
+
+
         public DateTime? LastInspection { get; set; }
         public DateTime? NextInspection { get; set; }
-      
+        public DateTime? CurrentDriverAssignedOn { get; set; }
 
 
-        public VehicleBrand Brand { get; set; }
-        public VehicleModel Model { get; set; }
-     
-       
-       
-       
-        public ICollection<MaintenanceRecord> MaintenanceRecords { get; set; }
-       
+
+        public VehicleBrand? Brand { get; set; }
+        public VehicleModel? Model { get; set; }
+
+
+
+
+
+        public ICollection<MaintenanceRecord>? MaintenanceRecords { get; set; }
+
     }
 }
